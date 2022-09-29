@@ -16,3 +16,5 @@ class Post(models.Model): # post라고 하는 이름의 테이블을 만들겠�
         return f'[{self.pk}]{self.title}  {self.created_at}' # 화면에 어떻게 출력되는지
                    # pk = primary key   타이틀   시간          순으로 포스트 제목 출력
 
+    def get_absolute_url(self):
+        return f'/blog/{self.pk}/'
