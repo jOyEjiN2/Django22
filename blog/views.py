@@ -5,15 +5,17 @@ from django.views.generic import ListView, DetailView
 # Create your views here.
 
 class PostList(ListView):
-    model = Post
+    model = Post  #model이라는 변수에 이용할 이름을 적어줌
     ordering = '-pk'
     # 템플릿은 모델명_list.html => post_list.html
-    #blog.html을 post_list.html로 바꿔줌
+    # blog.html을 post_list.html로 바꿔줌
+    # 전달하는 매개변수 모델명_list : post_list
 
 class PostDetail(DetailView):
     model = Post
-    #템플릿은 모델명_detail.html => post_detail.html
-    #single_post_page.html을 post_detail.html로 바꿔줌
+    # 템플릿은 모델명_detail.html => post_detail.html
+    # single_post_page.html을 post_detail.html로 바꿔줌
+    # 매개변수 모델명 : post
 
 
 
