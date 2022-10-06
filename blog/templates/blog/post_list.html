@@ -81,10 +81,14 @@
     <div class="row">
       <div class="col-md-8 col-lg-9">
 
-
         {% for p in post_list %}
         <div class="card mb-4">
+          {% if p.head_image %} <!-- head image가 있으면 그 이미지를 쓰고 -->
           <img class="card-img-top" src="{{p.head_image.url}}" alt="{{p}}의 head_image" /></a>
+          {% else %}  <!-- head image가 없으면 다른 임의의 이미지(이미지 제공 사이트에서)를 쓴다 -->
+          <!-- 계속 이미지가 변경되면 안되기 때문에 seed pk값을 넣어준다 -->
+          <img class="card-img-top" src="https://picsum.photos/seed/{{p.pk}}/800/200" alt="random image" /></a>
+          {% endif %} <!-- 이미지가 없어도 포스트 되도록 반복문 사용 -->
           <div class="card-body">
             <div class="small text-muted">{{p.created_at}}</div>
             <h2 class="card-title h4">{{p.title}}</h2>
