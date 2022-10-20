@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User  # 이미 선언된 유저클래스 사용 가능
 import os
 
 # Create your models here.
@@ -20,12 +21,17 @@ class Post(models.Model): # post라고 하는 이름의 테이블을 만들겠�
     update_at= models.DateTimeField(auto_now=True)  #수정시간을 넣어줌
 
 
-    # author 나중에 추가
+    # author 나중에 추가 => 10/20일 추가
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    # 데이터베이스가 바뀌었으니 make migration 해야함
+    # CASCADE => 동시에 지워짐 (user가 지워지면 포스트도 지워짐)
+    # SET_NULL => 포스트는 남겨짐
+    # makemigration 실행
 
 
     def __str__(self):
-        return f'[{self.pk}]{self.title}  {self.created_at}' # 화면에 어떻게 출력되는지
-                   # pk = primary key   타이틀   시간          순으로 포스트 제목 출력
+        return f'[{self.pk}]{self.title}::{self.author} :  {self.created_at}' # 화면에 어떻게 출력되는지
+                   # pk = primary key   타이틀  (author추가) 시간          순으로 포스트 제목 출력
 
     def get_absolute_url(self):
         return f'/blog/{self.pk}/'
