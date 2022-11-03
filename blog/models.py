@@ -6,6 +6,27 @@ import os
 # model이 변경되면 migrations을 해야한다
 #함수 추가할 경우에는 migration할 필요 없음 , Field가 추가될 때는 migration 해줘야함
 
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
+
+    def __str__(self):
+        return self.name
+    def get_absolute_url(self):
+        return f'/blog/tag/{self.slug}/'
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return f'/blog/category/{self.slug}/'
+
+    class Meta:
+        verbose_name_plural = 'Categories'
+
 class Post(models.Model): # post라고 하는 이름의 테이블을 만들겠다고 선언
     title = models.CharField(max_length=30)        # title이라고 하는 필드가 만들어짐, charfield 문자열 글자 수 제한, 최대 30글자까지
     hook_text = models.CharField(max_length=100, blank=True)
@@ -28,6 +49,9 @@ class Post(models.Model): # post라고 하는 이름의 테이블을 만들겠�
     # SET_NULL => 포스트는 남겨짐
     # makemigration 실행
 
+    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
+    tags = models.ManyToManyField(Tag, blank=True)
+                 # 다대다 관계
 
     def __str__(self):
         return f'[{self.pk}]{self.title}::{self.author} :  {self.created_at}' # 화면에 어떻게 출력되는지

@@ -1,9 +1,20 @@
 {% extends 'blog/base.html' %}
 
 {% block main_area %}
+        <h2>Blog
+            {% if category %}
+            - <span class="badge badge-secondary">{{category}}</span>
+            {% endif %}
+            {% if tag %}
+            - <i class="fas fa_tag"></i>
+            <span class="badge badge-secondary">
+                {{tag}} ({{tag.post_set.count}})
+            </span>
+            {% endif %}
+        </h2>
         {% if post_list.exists %}
         {% for p in post_list %}
-        <div class="card mb-4">
+        <div class="card mb-4" id="post-{{p.pk}}">
           {% if p.head_image %} <!-- head image가 있으면 그 이미지를 쓰고 -->
           <img class="card-img-top" src="{{p.head_image.url}}" alt="{{p}}의 head_image" /></a>
           {% else %}  <!-- head image가 없으면 다른 임의의 이미지(이미지 제공 사이트에서)를 쓴다 -->
@@ -11,15 +22,39 @@
           <img class="card-img-top" src="https://picsum.photos/seed/{{p.pk}}/800/200" alt="random image" /></a>
           {% endif %} <!-- 이미지가 없어도 포스트 되도록 반복문 사용 -->
           <div class="card-body">
-            <!-- <div class="small text-muted">{{p.created_at}}</div>  이거 글 위에 날짜뜨는거-->
-            <h2 class="card-title">{{p.title | upper}}</h2>
-            <!-- upper => 소문자를 대문자로 다 바꾸겠다 / lower => 다 소문자로 바꾸겠다-->
-            {% if p.hook_text %} <!-- %템플릿 명령어 사용? -->
-            <h5 class="text-muted"> {{p.hook_text}} </h5> <!--회색톤으로 변경 text-muted-->
-            {% endif %}
-            <p class="card-text">{{p.content | truncatechars:100 }}</p>
-            <!--truncatechars => 목록쪽에서 긴글은 100글자만 표현하겠다는 것 -->
-            <a class="btn btn-primary" href="{{p.get_absolute_url}}">Read more →</a>
+              {% if p.category %}
+                    <span class="badge badge-secondary float-right">{{p.category}}
+                        <!--<a href="{{p.category.get_absolute_url}}">
+                            {{p.category}}
+                        </a>-->
+                    </span>
+              {% else %}
+                    <span class="badge badge-secondary float-right">미분류
+                        <!--<a href="/blog/category/no_category/">
+                            미분류
+                        </a>-->
+                    </span>
+              {% endif %}
+                <!-- <div class="small text-muted">{{p.created_at}}</div>  이거 글 위에 날짜뜨는거-->
+              <h2 class="card-title">{{p.title | upper}}</h2>
+              <!-- upper => 소문자를 대문자로 다 바꾸겠다 / lower => 다 소문자로 바꾸겠다-->
+              {% if p.hook_text %} <!-- %템플릿 명령어 사용? -->
+              <h5 class="text-muted"> {{p.hook_text}} </h5> <!--회색톤으로 변경 text-muted-->
+              {% endif %}
+              <p class="card-text">{{p.content | truncatechars:100 }}</p>
+              <!--truncatechars => 목록쪽에서 긴글은 100글자만 표현하겠다는 것 -->
+              {% if p.tags.exists %}
+                <i class = "fas fa-tag"></i>
+                {% for t in p.tags.iterator %}
+              <span class="badge badge-pill badge-light">
+                  <a href="{{t.get_absolute_url}}">
+                      {{t}} <!--태그 t를 출력-->
+                  </a>
+              </span>
+                {% endfor %}
+              {% endif %}
+              <br><br>
+              <a class="btn btn-primary" href="{{p.get_absolute_url}}">Read more →</a>
           </div>
           <div class="card-footer">
             <div class="small text-muted">{{p.created_at | date:"Y-m-d h:m:s"}}</div>
