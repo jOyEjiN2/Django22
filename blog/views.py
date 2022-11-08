@@ -1,8 +1,33 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Post, Category, Tag
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+#로그인 사용자가 글을 입력할 수 있도록
 
 # Create your views here.
+class PostCreate(LoginRequiredMixin,UserPassesTestMixin,CreateView):  #CreateView,LoginRequiredMixin들을 상속받는다
+    model = Post
+    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
+    #모델명_form.html => 템플릿이 자동으로 호출
+
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user.is_staff
+        #superuser인지 staff인지 보고 둘중 하나만 맞아도 됨
+
+
+    # 이 폼이 올바른가
+    def form_valid(self,form):
+        current_user = self.request.user
+        if current_user.is_authenticated and (current_user.is_superuser or current_user.is_staff):  #true면 로그인된 인증된 유저인 것
+            form.instance.author = current_user
+            return super(PostCreate,self).form_valid(form)
+        else:
+            return redirect('/blog/')
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PostCreate,self).get_context_data()
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count
+        return context
 
 class PostList(ListView):
     model = Post  #model이라는 변수에 이용할 이름을 적어줌
