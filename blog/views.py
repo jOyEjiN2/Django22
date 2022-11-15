@@ -40,7 +40,7 @@ class PostUpdate(LoginRequiredMixin,UpdateView):
         context = super(PostUpdate,self).get_context_data()
         if self.object.tags.exists:
             tag_str_list = list()
-            for t in self.object.tag.all():
+            for t in self.object.tags.all():
                 tag_str_list.append(t.name)
             context['tags_str_default'] = ';'.join(tag_str_list)
         context['categories'] = Category.objects.all()
