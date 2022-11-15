@@ -21,8 +21,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls), #IP주소/admmin/
-    path('blog/',include('blog.urls')), #IP주소/blog/
-    path('',include('single_pages.urls')) #IP주소/ 만 있을 때
+    path('blog/', include('blog.urls')), #IP주소/blog/
+    path('',include('single_pages.urls')), #IP주소/ 만 있을 때
 ]
 
            #추가
