@@ -1,4 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  {% load socialaccount  %}
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
       <a class="navbar-brand" href="/">InternetProgramming</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,21 +17,23 @@
           <li class="nav-item">
             <a class="nav-link" href="/about_me/">About Me</a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown link
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-          </li>
+
         </ul>
         <ul class="navbar-nav ml-auto"> <!-- ml-auto= 최대한 왼쪽으로 여백을 주겠다 -->
-          <li class="nav-item">
+          {% if user.is_authenticated %}  <!-- 만약 로그인한 유저이면 logout이 뜨고 -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{user.username}}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/accounts/logout/">LogOut</a>
+            </div>
+          </li>
+          {% else %}
+          <li class="nav-item">   <!-- 그렇지 않으면  login이 뜬다 -->
             <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">LogIn</a>
           </li>
+          {% endif %}
         </ul>
       </div>
     </div>
@@ -48,12 +52,20 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-6"> <!--총 12이라 6 6으로 나누면 반반이 됨-->
-              <button type="button" class="btn btn-outline-dark btn-block btn-sm"><i class="fa-brands fa-google"></i> LogIn with Google</button>
-              <button type="button" class="btn btn-outline-dark btn-block btn-sm"><i class="fa-regular fa-envelope"></i> LogIn with Email</button>
+              <a role="button" class="btn btn-outline-dark btn-block btn-sm"
+                href="{% provider_login_url 'google' %}">   <!--a 링크를 사용해서 role을 버튼으로 줘서 링크 연결-->
+                <i class="fa-brands fa-google"></i> LogIn with Google
+              </a>
+              <a role="button" class="btn btn-outline-dark btn-block btn-sm"
+                href="/accounts/login/">
+                <i class="fa-regular fa-envelope"></i> LogIn with Email</a>
             </div>
             <div class="col-6">
-              <button type="button" class="btn btn-outline-dark btn-block btn-sm">SignUp with Email</button>
-                                                                  <!-- 버튼 크기를 똑같이 함-->
+              <a role="button" class="btn btn-outline-dark btn-block btn-sm"
+                href="/accounts/signup/">
+                <i class="fa-regular fa-envelope"></i>SignUp with Email
+              </a>
+              <!-- 버튼 크기를 똑같이 함-->
             </div>
           </div>
         </div>

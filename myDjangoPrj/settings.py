@@ -38,10 +38,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms',
+    'crispy_forms',  #crispy 라이브러리 설치했으니 추가하기
+    'allauth',       #allauth 라이브러리 설치 후 추가 (blog,single_pages위에 추가)
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'blog',
     'single_pages',
 ]
+
+#allauth설치 후 추가
+# 로그인 작업은 다 인증에 대한 작업
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+)
+SITE_ID = 1
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+LOGIN_REDIRECT_URL = '/blog/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
