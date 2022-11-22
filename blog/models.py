@@ -14,6 +14,7 @@ class Tag(models.Model):
         return self.name
     def get_absolute_url(self):
         return f'/blog/tag/{self.slug}/'
+
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
@@ -66,3 +67,18 @@ class Post(models.Model): # post라고 하는 이름의 테이블을 만들겠�
     def get_file_ext(self):
         return self.get_file_name().split('.')[-1] #a.text => a   text (.을 기준으로 나뉘어진다)
                                             # 제일 마지막에 해당되는 배열번호
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE) # on_delete =>사용자가 지워지면 댓글도 지워지도록
+    #다대일 FOREIGN 다대다 manytomany?
+    author = models.ForeignKey(User, on_delete=models.CASCADE) #댓글다는 사람 정보, 여러개의 댓글 달 수 있음
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_At = models.DateTimeField(auto_now=True) #댓글 수정
+
+    def __str__(self):
+        return f'{self.author} : {self.content}'
+
+    def get_absolute_url(self):
+        return f'{self.post.get_absolute_url()}#comment-{self.pk}'
