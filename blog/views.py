@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, Comment
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 #로그인 사용자가 글을 입력할 수 있도록
@@ -14,6 +14,7 @@ class PostUpdate(LoginRequiredMixin,UpdateView):
     model = Post
     fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category'] #, 'tag'
     template_name = 'blog/post_update_form.html'
+
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and request.user == self.get_object().author:
             return super(PostUpdate, self).dispatch(request, *args, **kwargs)
@@ -125,6 +126,17 @@ def new_comment(request,pk):
             else: # GET
                 return redirect(post.get_absolute_url())
         else: # 로그인 안한 사용자
+            raise PermissionDenied
+
+class CommentUpdate(LoginRequiredMixin, UpdateView):
+    # 템플릿 : comment_form
+    model = Comment
+    form_class = CommentForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().author:
+            return super(CommentUpdate, self).dispatch(request, *args, **kwargs)
+        else:
             raise PermissionDenied
 
 
