@@ -89,7 +89,7 @@ class PostCreate(LoginRequiredMixin,UserPassesTestMixin,CreateView):  #CreateVie
 class PostList(ListView):
     model = Post  #model이라는 변수에 이용할 이름을 적어줌
     ordering = '-pk'
-    paginated_by = 5 # 페이지 네이션
+    paginate_by = 5 # 페이지 네이션
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(PostList,self).get_context_data()
