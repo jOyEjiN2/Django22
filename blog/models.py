@@ -75,7 +75,7 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE) #댓글다는 사람 정보, 여러개의 댓글 달 수 있음
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    modified_At = models.DateTimeField(auto_now=True) #댓글 수정
+    modified_at = models.DateTimeField(auto_now=True) #댓글 수정
 
     def __str__(self):
         return f'{self.author} : {self.content}'
