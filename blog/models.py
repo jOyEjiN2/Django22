@@ -68,6 +68,12 @@ class Post(models.Model): # post라고 하는 이름의 테이블을 만들겠�
         return self.get_file_name().split('.')[-1] #a.text => a   text (.을 기준으로 나뉘어진다)
                                             # 제일 마지막에 해당되는 배열번호
 
+    def get_avatar_url(self):
+        if self.author.socialaccount_set.exists():
+            return self.author.socialaccount_set.first().get_avatar_url()
+        else:
+            return 'https://dummyimage.com/50x50/ced4da/6c757d.jpg'
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE) # on_delete =>사용자가 지워지면 댓글도 지워지도록
